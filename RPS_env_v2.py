@@ -53,58 +53,52 @@ class RockPaperScissors(MultiAgentEnv):
         self,
         num_agents=2,
         max_steps=10,
-        sheldon_cooper_mode=False,
         render_mode="human",
         seed=None,
     ):
         super().__init__()
 
-        self.max_steps = max_steps
         self._num_agents = num_agents
 
         self.agents = [f"player_{i}" for i in range(self.num_agents)]
-        self.possible_agents = self.agents.copy()
+        self.possible_agents = [f"player_{i}" for i in range(self.num_agents)]
 
-        # Define action and observation spaces
-        if sheldon_cooper_mode:
-            num_actions = 5  # Rock, Paper, Scissors, Lizard, Spock
-        else:
-            num_actions = 3  # Rock, Paper, Scissors
+        # The observations are always the last taken actions. Hence observation
+        # and action spaces are identical
 
         self.observation_spaces = {
-            agent: Discrete(n=num_actions, start=0) for agent in self.agents
+            "player_0": MultiDiscrete(nvec=[3, 3], start=[0, 0]),
+            "player_1": MultiDiscrete(nvec=[3, 3], start=[0, 0]),
         }
         self.action_spaces = {
-            agent: Discrete(n=num_actions, start=0) for agent in self.agents
+            "player_0": MultiDiscrete(nvec=[3, 3], start=[0, 0]),
+            "player_1": MultiDiscrete(nvec=[3, 3], start=[0, 0]),
         }
 
-        self.sheldon_cooper_mode = sheldon_cooper_mode
         self.last_move = None
         self.num_moves = 0
 
         self.terminateds = set()
         self.truncateds = set()
 
-    @property
-    def num_agents(self):
-        return self._num_agents
+    def observation_space(self, agent):
+        return self.observation_spaces[agent]
 
-    # def observe(self, obs):
-    #     return np.array([obs], dtype=np.int32)
+    def action_space(self, agent):
+        return self.action_spaces[agent]
 
+    # @override(MultiAgentEnv)
     def reset(self, *, seed=None, options=None):
         self.terminateds = set()
         self.truncateds = set()
-
-        # Initialize observations for both players
-        obs = {agent: 0 for agent in self.agents}
-        infos = {agent: {} for agent in self.agents}
+        obs, infos = {"player_0": [0, 0], "player_1": [0, 0]}, {}
 
         self.num_moves = 0
 
         # Return starting observations
         return obs, infos
 
+    # @override(MultiAgentEnv)
     def step(self, action_dict):
         self.num_moves += 1
 
@@ -122,21 +116,24 @@ class RockPaperScissors(MultiAgentEnv):
         }
 
         # Compute the rewards for each player based on the win-matrix
-        r1, r2 = self.WIN_MATRIX[(move1, move2)]
+        r1, r2 = self.WIN_MATRIX[(move1[0], move2[0])]
         rewards = {"player_0": r1, "player_1": r2}
 
-        # Terminate the entire episode for all agents, once max_steps moves have been made.
-        terminateds = {"__all__": self.num_moves >= self.max_steps}
-        truncateds = {"player_0": False, "player_1": False}
-        infos = {"player_0": {}, "player_1": {}}
+        # Terminate the entire episode for all agents, once 10 moves have been made.
+        terminateds = {"__all__": self.num_moves >= 10}
+        print(f"--------Step: {self.num_moves} -------------********\n")
+        print(f"--------Actions: {move1} -------------********\n")
+        print(f"--------Actions: {move2} -------------********\n")
+        print(f"--------Actions type: {type(move2)} -------------********\n")
+        print(f"--------observations: {observations} -------------********\n")
 
-        # print(f"--------Step: {self.num_moves} -------------********\n")
-        # print(f"--------Actions: {move1} -------------********\n")
-        # print(f"--------Actions: {move2} -------------********\n")
-        # print(f"--------Actions type: {type(move2)} -------------********\n")
-        # print(f"--------observations: {observations} -------------********\n")
-
-        return observations, rewards, terminateds, truncateds, infos
+        return (
+            observations,
+            rewards,
+            terminateds,
+            {"player_0": False, "player_1": False},
+            {"player_0": {}, "player_1": {}},
+        )
 
     # @override(MultiAgentEnv)
     def render(self, mode="human"):

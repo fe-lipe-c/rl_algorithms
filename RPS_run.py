@@ -30,16 +30,42 @@ parser = add_rllib_example_script_args(
     default_timesteps=200_000,
 )
 
+parser.add_argument("--sheldon_cooper_mode", type=bool, default=False)
 parser.set_defaults(
     enable_new_api_stack=True,
     num_agents=2,
 )
-
-parser.add_argument("--sheldon_cooper_mode", type=bool, default=False)
 
 if __name__ == "__main__":
     args = parser.parse_args()
 
     assert args.num_agents == 2
 
-    register_env("rock_paper_scissors", lambda _: RockPaperScissors(args))
+    def env_creator(env_config):
+        return RockPaperScissors(sheldon_cooper_mode=args.sheldon_cooper_mode)
+
+    register_env("rock_paper_scissors_v10", env_creator)
+
+    base_config = (
+        PPOConfig()
+        .environment("rock_paper_scissors_v10")
+        .multi_agent(
+            policies=["learnable_policy", "random"],
+            policy_mapping_fn=lambda agent_id, *args, **kwargs: [
+                "learnable_policy",
+                "random",
+            ][int(agent_id.split("_")[1]) % 2],
+            policies_to_train=["learnable_policy"],
+        )
+        .rl_module(
+            rl_module_spec=MultiRLModuleSpec(
+                rl_module_specs={
+                    "learnable_policy": RLModuleSpec(),
+                    "random": RLModuleSpec(),
+                    # "random": RLModuleSpec(module_class=RandomRLModule),
+                }
+            ),
+        )
+    )
+
+    run_rllib_example_script_experiment(base_config, args)
