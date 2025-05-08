@@ -1,0 +1,16 @@
+[0] Config.pm:308> INFO - This is Biber 2.20
+[0] Config.pm:311> INFO - Logfile is '.latexbuild/algorithms.blg'
+[42] biber:340> INFO - === Wed May  7, 2025, 21:12:32
+[52] Biber.pm:420> INFO - Reading '.latexbuild/algorithms.bcf'
+[88] Biber.pm:994> INFO - Found 1 citekeys in bib section 0
+[98] Biber.pm:4463> INFO - Processing section 0
+[104] Biber.pm:4654> INFO - Looking for bibtex file 'references.bib' for section 0
+[105] bibtex.pm:1713> INFO - LaTeX decoding ...
+[106] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[128] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[128] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[128] Biber.pm:4283> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'en-US'
+[128] Biber.pm:4289> INFO - No sort tailoring available for locale 'en-US'
+[129] bbl.pm:676> INFO - Writing '.latexbuild/algorithms.bbl' with encoding 'UTF-8'
+[129] bbl.pm:677> INFO - Converting UTF-8 to TeX macros on output to .bbl
+[130] bbl.pm:779> INFO - Output to .latexbuild/algorithms.bbl

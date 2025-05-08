@@ -2,7 +2,7 @@
 
 ## Policy Gradient Methods
 
-In policy-based RL, the actor is a parameterized policy function $\pi_{\theta}$, where $\theta$ are the parameters.
+In policy-based RL, the policy is a function $\pi_{\theta}$, where $\theta$ are the parameters. 
 
 ###  A2C (Advantage Actor-Critic)
 
@@ -20,3 +20,5 @@ $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^
 Where:
 - $\tau$ is a trajectory $(s_0, a_0, r_0, s_1, a_1, r_1, \dots)$
 - $R_{t}$ is the return (discounted sum of rewards) from time t
+
+

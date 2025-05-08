@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage[margin=1in]{geometry}  % or any other size like 2cm, 25mm, etc.
+\usepackage[backend=biber,style=numeric,citestyle=nature]{biblatex}
+\usepackage{parskip}  % This automatically sets paragraph spacing
+% \usepackage{showframe}
+\setlength{\parindent}{20pt}
+\setlength{\parskip}{1em}  % Sets paragraph spacing to 1em
+
+\usepackage[backend=biber,style=numeric,citestyle=nature]{biblatex}
+
+\addbibresource{references.bib}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\DOI}{https://github.com/fe-lipe-c/rl\_algorithms}
+\newcommand{\monthyear}{Month Year}
+
+\newenvironment{exercise}[1]
+    {\vspace{0.5cm}\hrule\vspace{0.5cm}\noindent\fbox{#1}\\}
+    {\vspace{0.5cm}}
+
+\newenvironment{response}
+{\vspace{0.2cm}\noindent\colorbox{red}{resolution}}
+    {\vspace{0.5cm}}
+
+\emergencystretch=1em
+
+\begin{document}
+
+\begin{titlepage}
+	\begin{flushright}
+		\LARGE{\textbf{Reinforcement Learning}}\\
+		\vfill
+		\Huge{\textbf{Algorithms}}\\
+		\vfill
+		\large Felipe Costa\\
+		\vfill
+		\normalsize Related material at:\\
+		\DOI
+		\vfill
+	\end{flushright}
+\end{titlepage}
+
+% \begin{center}
+% 	\tableofcontents
+% \end{center}
+
+\pagebreak
+
+\section*{Reinforcement Learning Algorithms}
+
+\subsection*{Policy Gradient Methods}
+
+In policy-based RL, the policy is a function $\pi_{\theta}$, where $\theta$ are the parameters.\cite{szepesvari2019algos}
+
+\subsection*{Advantage Actor-Critic (A2C)}
+
+A2C is a policy gradient algorithm that combines the actor-critic architecture with advantage functions to improve sample efficiency and stability in reinforcement learning. A2C belongs to the family of actor-critic methods, which maintain two components:
+
+\begin{itemize}
+  \item An \textbf{actor} (policy network) that decides which actions to take
+  \item A \textbf{critic} (value network) that evaluates how good those actions are
+\end{itemize}
+
+The key innovation in A2C is using the "advantage function" to reduce variance in policy gradient updates while maintaining an unbiased estimate of the gradient.
+
+The foundation of A2C is the policy gradient theorem. For a policy $\pi_{\theta}$ parameterized by $\theta$, the gradient of the expected return $J(\theta)$ is:
+
+\begin{equation}
+	\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot R_t \right]
+\end{equation}
+
+Where:
+- $\tau$ is a trajectory $(s_0, a_0, r_0, s_1, a_1, r_1, \dots)$
+- $R_{t}$ is the return (discounted sum of rewards) from time t
+
+
+\pagebreak
+\printbibliography
+
+\end{document}
+
